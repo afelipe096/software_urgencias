@@ -1,0 +1,35 @@
+' ==========================
+' Diagrama de Casos de Uso
+' ==========================
+@startuml
+left to right direction
+
+actor Paciente
+actor Enfermero
+actor Medico
+actor Administrador
+
+Paciente -- (Registrar paciente)
+Paciente -- (Consultar historial médico)
+Paciente -- (Recibir tratamiento)
+Paciente -- (Pagar tratamiento)
+
+Enfermero -- (Asignar triage)
+Enfermero -- (Registrar paciente)
+Enfermero -- (Actualizar paciente)
+Enfermero -- (Hospitalizar paciente)
+
+Medico -- (Atender paciente)
+Medico -- (Actualizar historial médico)
+Medico -- (Prescribir tratamiento)
+
+Administrador -- (Registrar médico)
+Administrador -- (Registrar enfermero)
+Administrador -- (Gestionar camas)
+Administrador -- (Consultar reportes)
+
+(Registrar paciente) ..> (Actualizar paciente) : <<include>>
+(Atender paciente) ..> (Actualizar historial médico) : <<include>>
+(Recibir tratamiento) ..> (Pagar tratamiento) : <<extend>>
+
+@enduml

@@ -1,0 +1,308 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam classFontSize 13
+skinparam classAttributeFontSize 12
+skinparam classOperationFontSize 12
+skinparam linetype ortho
+hide empty members
+
+title Diagrama de Clases - Sistema Triage
+
+package "Modelo de Dominio" {
+    package model {
+        abstract class Persona {
+            - id: int
+            - nombre: String
+            - telefono: String
+            - direccion: String
+            - correo: String
+            + getId(): int
+            + setId(int)
+            + getNombre(): String
+            + setNombre(String)
+            + getTelefono(): String
+            + setTelefono(String)
+            + getDireccion(): String
+            + setDireccion(String)
+            + getCorreo(): String
+            + setCorreo(String)
+            + mostrarInfo()
+        }
+
+        class Paciente {
+            - sintomas: List<String>
+            - nivelTriage: int
+            - enfermeroAsignado: Enfermero
+            - numeroCama: Integer
+            - historial: HistorialMedico
+            - hospitalizado: boolean
+            - atendidoPor: String
+            + getSintomas(): List<String>
+            + agregarSintoma(String)
+            + getNivelTriage(): int
+            + setNivelTriage(int)
+            + getEnfermeroAsignado(): Enfermero
+            + asignarEnfermero(Enfermero)
+            + getNumeroCama(): Integer
+            + setNumeroCama(Integer)
+            + asignarCama(int)
+            + eliminarEnfermero()
+            + getHistorial(): HistorialMedico
+            + isHospitalizado(): boolean
+            + hospitalizar()
+            + darDeAlta()
+            + getAtendidoPor(): String
+            + setAtendidoPor(String)
+            + mostrarInfo()
+            + actualizarPaciente()
+            + eliminarAsignacionTriage()
+            + registrarPaciente()
+        }
+
+        class Medico {
+            - especialidad: String
+            + getEspecialidad(): String
+            + setEspecialidad(String)
+            + mostrarInfo()
+            + atenderPaciente(Paciente)
+            + continuarConsulta(Paciente)
+            + actualizarMedico()
+            + registrarMedico()
+            + eliminarMedico()
+        }
+
+        class Enfermero {
+            - especialidad: String
+            - turno: String
+            + getEspecialidad(): String
+            + setEspecialidad(String)
+            + getTurno(): String
+            + setTurno(String)
+            + mostrarInfo()
+            + asignarTriage(Paciente)
+            + actualizarEnfermero()
+            + registrarEnfermero()
+            + eliminarEnfermero()
+            + buscarEnfermeroPorId(int)
+        }
+
+        class HistorialMedico {
+            - pacienteId: int
+            - paciente: Paciente
+            - registros: List<String>
+            - fechaActualizacion: Date
+            + agregarRegistro(String)
+            + obtenerHistorial(): String
+            + getPacienteId(): int
+            + getPaciente(): Paciente
+            + getFechaActualizacion(): Date
+        }
+
+        class Triage {
+            - catalogoEnfermedades: Map<int, String>
+            - nivelesUrgencia: Map<int, int>
+            - enfermedadesPaciente: List<int>
+            - nivelUrgencia: int
+            + getNivelUrgencia(): int
+            + getEnfermedad(int): String
+            + getCatalogoEnfermedades(): Map<int, String>
+            + mostrarCatalogo()
+            + agregarEnfermedad(int)
+            + eliminarEnfermedad(int)
+            + evaluarPaciente(Paciente)
+        }
+
+        class TratamientoMedico {
+            - catalogoTratamientos: Map<int, String>
+            - costosTratamientos: Map<int, double>
+            + mostrarCatalogoTratamientos()
+            + generarInformeTratamientoString(Paciente): String
+            + generarReciboString(Paciente): String
+            + calcularTotal(Paciente): double
+        }
+
+        class Medicamento {
+            - codigoEnfermedad: int
+            - nombre: String
+            - dosis: String
+            - costoUnitario: double
+            + getCodigoEnfermedad(): int
+            + getNombre(): String
+            + getDosis(): String
+            + getCostoUnitario(): double
+        }
+
+        class MedicamentoRepository {
+            - datos: Map<int, Medicamento>
+            + findByCodigoEnfermedad(int): Optional<Medicamento>
+        }
+
+        class SistemaPagos {
+            + pagarEfectivo(parent: Component, monto: double): boolean
+            + pagarTarjeta(parent: Component, monto: double): boolean
+            + pagarSeguro(parent: Component, monto: double): boolean
+        }
+
+        interface Registrable {
+            + registrar()
+        }
+        interface Actualizable {
+            + actualizar()
+        }
+        interface Eliminable {
+            + eliminar()
+        }
+    }
+}
+
+package "Interfaz Gráfica y Controladores" {
+    package GUI {
+        class InputsPersonalizados {
+            + mostrarMensaje(String)
+            + obtenerEntrada(String): String
+        }
+        class MenuController {
+            + mostrarMenu()
+            + seleccionarOpcion(int)
+        }
+        class VentanaPrincipal {
+            + iniciar()
+            + cerrar()
+        }
+    }
+
+    package "MenuAcciones" {
+        class PersonalController {
+            + mostrarPersonal()
+            + agregarPersonal()
+            + eliminarPersonal()
+            + actualizarPersonal()
+        }
+        class MedicoController {
+            + mostrarMedicos()
+            + agregarMedico()
+            + eliminarMedico()
+            + actualizarMedico()
+        }
+        class EnfermeriaController {
+            + mostrarEnfermeros()
+            + agregarEnfermero()
+            + eliminarEnfermero()
+            + actualizarEnfermero()
+        }
+        class HospitalizacionController {
+            + mostrarPacientesHospitalizados()
+            + asignarCama()
+            + darDeAlta()
+            + verEstadoCamas()
+        }
+    }
+}
+
+package "Repositorio de Datos" {
+    package repository {
+        class AdministracionPersonal {
+            + getMedicos(): List<Medico>
+            + registrarMedico(Medico)
+            + actualizarMedico(Medico)
+            + eliminarMedico(Medico)
+            + buscarMedicoPorId(int): Medico
+            + getEnfermeros(): List<Enfermero>
+            + registrarEnfermero(Enfermero)
+            + actualizarEnfermero(Enfermero)
+            + eliminarEnfermero(Enfermero)
+            + buscarEnfermeroPorId(int): Enfermero
+        }
+        class DatosPredeterminados {
+            + cargarMedicos(): List<Medico>
+            + crearEnfermeros(): List<Enfermero>
+            + crearPacientes(): List<Paciente>
+            + eliminarPaciente(Paciente)
+            + actualizarPaciente(Paciente)
+            + getPacientesRegistrados(): List<Paciente>
+        }
+        class Hospitalizacion {
+            - pacientesHospitalizados: List<Paciente>
+            - camasDisponibles: Map<int, Boolean>
+            + asignarCama(Paciente): boolean
+            + darDeAlta(Paciente)
+            + estadoCamasString(): String
+            + verPacientesHospitalizados()
+            + getPacientesHospitalizados(): List<Paciente>
+        }
+    }
+}
+
+package "Utilidades" {
+    package utils {
+        class Validadores {
+            + esCorreoGmailValido(String): boolean
+            + esNombreValido(String): boolean
+            + esTelefonoValido(String): boolean
+        }
+    }
+}
+
+' Relaciones de herencia
+Paciente --|> Persona
+Medico --|> Persona
+Enfermero --|> Persona
+
+' Relaciones de implementación de interfaces
+Paciente ..|> Registrable
+Paciente ..|> Actualizable
+Paciente ..|> Eliminable
+
+Medico ..|> Registrable
+Medico ..|> Actualizable
+Medico ..|> Eliminable
+
+Enfermero ..|> Registrable
+Enfermero ..|> Actualizable
+Enfermero ..|> Eliminable
+
+' Relaciones de asociación
+Paciente ||--|| HistorialMedico : historial
+Paciente }o--|| Enfermero : enfermeroAsignado
+
+HistorialMedico ||--|| Paciente : paciente
+
+Triage ||--o{ Paciente : evaluarPaciente
+TratamientoMedico ||--o{ Paciente : generarInforme
+
+AdministracionPersonal ||--o{ Medico
+AdministracionPersonal ||--o{ Enfermero
+DatosPredeterminados ||--o{ Paciente
+DatosPredeterminados ||--o{ Medico
+DatosPredeterminados ||--o{ Enfermero
+
+Hospitalizacion ||--o{ Paciente : pacientesHospitalizados
+
+MedicamentoRepository ||--o{ Medicamento
+
+' Relaciones de controladores
+MenuController --> VentanaPrincipal
+MenuController --> PersonalController
+MenuController --> MedicoController
+MenuController --> EnfermeriaController
+MenuController --> HospitalizacionController
+
+PersonalController --> AdministracionPersonal
+MedicoController --> AdministracionPersonal
+MedicoController --> DatosPredeterminados
+MedicoController --> InputsPersonalizados
+EnfermeriaController --> AdministracionPersonal
+EnfermeriaController --> DatosPredeterminados
+EnfermeriaController --> Hospitalizacion
+EnfermeriaController --> InputsPersonalizados
+HospitalizacionController --> DatosPredeterminados
+HospitalizacionController --> Hospitalizacion
+HospitalizacionController --> InputsPersonalizados
+HospitalizacionController --> SistemaPagos
+
+PersonalController ..> Validadores
+EnfermeriaController ..> Validadores
+
+@enduml
