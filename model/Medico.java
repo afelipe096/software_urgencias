@@ -1,6 +1,6 @@
 package model;
 import repository.AdministracionPersonal;
-public class Medico extends Persona implements Registrable, Actualizable, Eliminable {
+public class Medico extends Persona<Medico> implements Crud {
     private String especialidad;
 
     public Medico(int id, String nombre, String telefono, String direccion, String correo, String especialidad) {

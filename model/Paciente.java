@@ -2,9 +2,8 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import repository.DatosPredeterminados;
-public class Paciente extends Persona implements Registrable, Actualizable, Eliminable {
+public class Paciente extends Persona<Paciente> implements Crud {
     private List<String> sintomas;
     private int nivelTriage;
     private Enfermero enfermeroAsignado;

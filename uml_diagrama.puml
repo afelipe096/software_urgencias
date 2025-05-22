@@ -12,7 +12,7 @@ title Diagrama de Clases - Sistema Triage
 
 package "Modelo de Dominio" {
     package model {
-        abstract class Persona {
+        abstract class Persona<T> {
             - id: int
             - nombre: String
             - telefono: String
@@ -145,15 +145,12 @@ package "Modelo de Dominio" {
             + pagarSeguro(parent: Component, monto: double): boolean
         }
 
-        interface Registrable {
+        interface Crud {
             + registrar()
-        }
-        interface Actualizable {
             + actualizar()
-        }
-        interface Eliminable {
             + eliminar()
         }
+        
     }
 }
 
@@ -251,17 +248,13 @@ Medico --|> Persona
 Enfermero --|> Persona
 
 ' Relaciones de implementación de interfaces
-Paciente ..|> Registrable
-Paciente ..|> Actualizable
-Paciente ..|> Eliminable
+Paciente ..|> Crud
 
-Medico ..|> Registrable
-Medico ..|> Actualizable
-Medico ..|> Eliminable
+Medico ..|> Crud
 
-Enfermero ..|> Registrable
-Enfermero ..|> Actualizable
-Enfermero ..|> Eliminable
+
+Enfermero ..|> Crud
+
 
 ' Relaciones de asociación
 Paciente ||--|| HistorialMedico : historial

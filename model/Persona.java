@@ -1,6 +1,6 @@
 package model;
 import java.util.Scanner;
-public abstract class Persona {
+public abstract class Persona<T> {
     protected int id;
     protected String nombre;
     protected String telefono;

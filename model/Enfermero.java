@@ -1,10 +1,8 @@
 package model;
 
 import repository.AdministracionPersonal;
-import java.awt.Component;
-import java.util.List;
 
-public class Enfermero extends Persona implements Registrable, Actualizable, Eliminable {
+public class Enfermero extends Persona<Enfermero> implements Crud {
     private String especialidad;
     private String turno;
 
